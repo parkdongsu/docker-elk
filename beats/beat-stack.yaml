@@ -4,7 +4,7 @@ version: '3.7'
 services:
   ################# Filebeat info ##################
   filebeat:
-    image: docker.elastic.co/beats/filebeat:7.3.1
+    image: docker.elastic.co/beats/filebeat:6.5.4
     user: root
     command:
       - --strict.perms=false
@@ -26,7 +26,7 @@ services:
 
   ################# Metricbeat info ##################
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat:7.3.1
+    image: docker.elastic.co/beats/metricbeat:6.5.4
     user: root
     command:
       - "-system.hostfs=/hostfs"
