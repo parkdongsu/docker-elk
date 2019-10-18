@@ -9,5 +9,7 @@ xpack.monitoring.ui.container.elasticsearch.enabled: true
 
 ## X-Pack security credentials
 #
-elasticsearch.username: elastic
-elasticsearch.password: changeme
+#Created by dspark############################
+#elasticsearch.username: elastic
+#elasticsearch.password: changeme
+##############################################

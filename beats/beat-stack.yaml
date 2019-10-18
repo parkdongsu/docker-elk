@@ -1,0 +1,64 @@
+version: '3.7'
+
+################## Stack services ##################
+services:
+  ################# Filebeat info ##################
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.3.1
+    user: root
+    command:
+      - --strict.perms=false
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    configs:
+      - source: filebeat_config
+        target: /usr/share/filebeat/filebeat.yml
+    networks:
+      - elk_net
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+
+  ################# Metricbeat info ##################
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.3.1
+    user: root
+    command:
+      - "-system.hostfs=/hostfs"
+    configs:
+      - source: metricbeat_config
+        target: /usr/share/metricbeat/metricbeat.yml
+    networks:
+      - elk_net
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - elasticsearch
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+
+configs: 
+  ################## Filebeat config ##################
+  filebeat_config:
+    file: ./filebeat/config/filebeat.yml
+
+  ################## Metricbeat config ##################
+  metricbeat_config:
+    file: ./metricbeat/config/metricbeat.yml
+
+networks:
+  elk_net:
+    external: true

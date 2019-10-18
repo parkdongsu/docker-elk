@@ -1,0 +1,85 @@
+#==========================  Modules configuration ============================
+metricbeat.modules:
+#------------------------------- System Module -------------------------------
+- module: system
+  metricsets:
+    - cpu             # CPU usage
+    - load            # CPU load averages
+    - memory          # Memory usage
+    - network         # Network IO
+    - process         # Per process metrics
+    - process_summary # Process summary
+    - uptime          # System Uptime
+    - core           # Per CPU core usage
+    - diskio         # Disk IO
+    - filesystem     # File system usage for each mountpoint
+    - fsstat         # File system summary metrics
+    - raid           # Raid
+    - socket         # Sockets and connection info (linux only)
+  enabled: true
+  period: 10s
+  processes: ['.*']
+  cpu.metrics:  ["percentages"]
+  core.metrics: ["percentages"]
+  raid.mount_point: '/'
+
+#------------------------------- Docker Module -------------------------------
+- module: docker
+  metricsets:
+    - "container"
+    - "cpu"
+    - "diskio"
+    - "healthcheck"
+    - "info"
+    - "memory"
+    - "network"
+  hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
+  enabled: true
+
+#============================== Dashboards =====================================
+# These settings control loading the sample dashboards to the Kibana index. Loading
+# the dashboards is disabled by default and can be enabled either by setting the
+# options here, or by using the `-setup` CLI flag or the `setup` command.
+setup.dashboards.enabled: true
+#============================== Kibana =====================================
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana.host: "elk_kibana:5601"
+setup.kibana.protocol: "http"
+# setup.kibana.username: "kibana"
+# setup.kibana.password: "changeme"
+
+#================================ Outputs =====================================
+# Configure what output to use when sending the data collected by the beat.
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  hosts: ["elk_elasticsearch:9200"]
+  # username: "elastic"
+  # password: "changeme"
+
+#==================== Elasticsearch template setting ==========================
+# setup.template.settings:
+#   index.number_of_shards: 5
+#   index.codec: best_compression
+  #_source.enabled: false
+
+# setup.template:
+#   name: 'metricbeat-*'
+#   pattern: 'metricbeat-*'
+#   enabled: false
+
+#============================== X-Pack monitoring =====================================
+# xpack.monitoring.enabled: true
+# xpack.monitoring.elasticsearch.username: "elastic"
+# xpack.monitoring.elasticsearch.password: "changeme"
+# xpack.monitoring.elasticsearch.url: ["http://elk_elasticsearch:9200"]
+
+#================================ Logging =====================================
+logging.level: warning
+logging.to_files: true
+logging.files:
+  path: /var/log/metricbeat
+  name: metricbeat
+  keepfiles: 7
+  permissions: 0644
