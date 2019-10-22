@@ -5,11 +5,12 @@
 server.name: kibana
 server.host: "0"
 elasticsearch.hosts: [ "http://elasticsearch:9200" ]
-xpack.monitoring.ui.container.elasticsearch.enabled: true
+
+
+#Created by dspark#############################
+#xpack.monitoring.ui.container.elasticsearch.enabled: true
 
 ## X-Pack security credentials
-#
-#Created by dspark############################
 #elasticsearch.username: elastic
 #elasticsearch.password: changeme
 ##############################################
